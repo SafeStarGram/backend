@@ -1,13 +1,13 @@
 server:
   port: 8080
 
-spring:
-  config:
-    activate:
-      on-profile: dev
-
   spring:
     datasource:
       url:
       username:
       password:
+      driver-class-name:
+
+spring:
+  profiles:
+    active: dev

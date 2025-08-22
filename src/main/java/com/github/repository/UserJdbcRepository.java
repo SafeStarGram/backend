@@ -7,8 +7,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 @Repository
@@ -54,5 +54,19 @@ public class UserJdbcRepository {
         return key == null ? null : key.longValue();
 
 
+    }
+
+    public UserEntity findByEmail(String email) {
+        String sql = "SELECT user_id, email, name, password FROM users WHERE email = ?";
+        var list = jdbcTemplate.query(sql, (rs, rn) -> {
+            UserEntity u = new UserEntity();
+            u.setUserId(rs.getInt("user_id"));   // PK 컬럼명에 맞게
+            u.setEmail(rs.getString("email"));
+            u.setName(rs.getString("name"));
+            u.setPassword(rs.getString("password"));
+            return u;
+        }, email);
+
+        return list.isEmpty() ? null : list.get(0);
     }
 }
