@@ -2,27 +2,36 @@ package com.github.service;
 
 import com.github.dto.SignUpDto;
 import com.github.entity.UserEntity;
-import com.github.repository.UserRepository;
+import com.github.repository.UserJdbcRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
 
-    private final UserRepository userRepository;
+    private final UserJdbcRepository userJdbcRepository;
 
+
+
+    @Transactional
     public void join(SignUpDto signUpDto) {
 
-        if (userRepository.existsByEmail(signUpDto.getEmail())) {
+        if (userJdbcRepository.existsByEmail(signUpDto.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
-            UserEntity user = UserEntity.builder()
-                    .Email(signUpDto.getEmail())
-                    .password(signUpDto.getPassword())
-                    .name(signUpDto.getName())
-                    .build();
-        }
+
+        UserEntity userEntity = UserEntity.builder()
+                .email(signUpDto.getEmail())
+                .name(signUpDto.getName())
+                .password(signUpDto.getPassword()) // <<encode필요
+                .build();
+
+        userJdbcRepository.save(userEntity);
+    }
+
+
     }
 
