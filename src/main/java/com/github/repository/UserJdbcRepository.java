@@ -70,4 +70,23 @@ public class UserJdbcRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    public UserEntity findById(Integer userId) {
+        String sql = "SELECT users_id, name, phone_number, radio_number, profile_photo_url, department_id, position_id " +
+                "FROM users WHERE users_id = ?";
+
+        var list = jdbcTemplate.query(sql, (rs, rn) -> {
+            UserEntity u = new UserEntity();
+            u.setUserId(rs.getInt("users_id"));
+            u.setName(rs.getString("name"));
+            u.setPhoneNumber(rs.getString("phone_number"));
+            u.setRadioNumber(rs.getString("radio_number"));
+            u.setProfilePhotoUrl(rs.getString("profile_photo_url"));
+            u.setDepartmentId(rs.getInt("department_id"));
+            u.setPositionId(rs.getInt("position_id"));
+            return u;
+        }, userId);
+
+        return list.isEmpty() ? null : list.get(0);
+    }
+
 }

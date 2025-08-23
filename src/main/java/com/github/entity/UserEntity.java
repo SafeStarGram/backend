@@ -20,8 +20,8 @@ public class UserEntity {
     private String email;
     private String password;
     private String profilePhotoUrl;
-    private Integer phoneNumber;
-    private Integer radioNumber;
+    private String phoneNumber; //varchar여서 int -> string으로 수정
+    private String radioNumber; //varchar여서 int -> string으로 수정
     private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
