@@ -89,4 +89,29 @@ public class UserJdbcRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    public void updateProfile(int userId,
+                              String phoneNumber,
+                              String radioNumber,
+                              Integer departmentId,
+                              Integer positionId,
+                              String profilePhotoUrl) {
+        String sql = "UPDATE users " +
+                "SET phone_number = ?, " +
+                "    radio_number = ?, " +
+                "    department_id = ?, " +
+                "    position_id = ?, " +
+                "    profile_photo_url = ?, " +
+                "    updated_at = NOW() " +
+                "WHERE users_id = ?";
+
+        jdbcTemplate.update(sql,
+                phoneNumber,
+                radioNumber,
+                departmentId,
+                positionId,
+                profilePhotoUrl,
+                userId
+        );
+    }
+
 }
