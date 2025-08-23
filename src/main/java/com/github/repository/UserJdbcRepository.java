@@ -114,4 +114,10 @@ public class UserJdbcRepository {
         );
     }
 
+//    사진업로드
+    public int updateProfilePhoto(int userId, String photoUrl) {
+        String sql = "UPDATE users SET profile_photo_url = ?, updated_at = NOW() WHERE users_id = ?";
+        return jdbcTemplate.update(sql, photoUrl, userId);
+    }
+
 }

@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .requestMatchers("/profiles/**").permitAll() //프로필
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll() //사진업로드
                 .anyRequest().authenticated()
         );
 

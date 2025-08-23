@@ -1,3 +1,6 @@
+file:
+  upload-dir: ./uploads #사진폴더 -> 파일이 어디/얼마까지 저장될지 서버가 알아야 함.
+
 server:
   port: 8080
 
@@ -7,6 +10,11 @@ spring:
     username: root
     password: cking9749!
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  servlet: #사진폴더 -> 파일이 어디/얼마까지 저장될지 서버가 알아야 함.
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 #spring:
 #  profiles:

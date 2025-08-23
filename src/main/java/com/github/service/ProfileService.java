@@ -10,11 +10,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
 
     private final UserJdbcRepository userJdbcRepository;
+    @Value("${file.upload-dir:./uploads}")
+    private String uploadDir;
+
 
     public ProfileResponse getMyProfile(int userId) {
 
@@ -65,4 +77,42 @@ public class ProfileService {
                 .positionId(u.getPositionId())
                 .build();
     }
+
+    /** 프로필 사진 업로드: 파일 저장 후 DB의 profile_photo_url 갱신하고 공개 URL을 반환 */
+    public String uploadProfilePhoto(int userId, MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("파일이 비어 있습니다.");
+        }
+
+        // 1) 사용자 존재 확인
+        UserEntity exists = userJdbcRepository.findById(userId);
+        if (exists == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.");
+        }
+
+        // 2) 저장 디렉토리 보장
+        Path baseDir = Paths.get(uploadDir).toAbsolutePath().normalize();
+        Files.createDirectories(baseDir);
+
+        // 3) 파일명 생성 (UUID + 원본 확장자 유지)
+        String original = file.getOriginalFilename();
+        String ext = "";
+        if (original != null && original.contains(".")) {
+            ext = original.substring(original.lastIndexOf('.')); // 예: ".png"
+        }
+        String storedName = "profile_" + userId + "_" + UUID.randomUUID() + ext;
+
+        // 4) 디스크 저장
+        Path target = baseDir.resolve(storedName);
+        Files.copy(file.getInputStream(), target);
+
+        // 5) 공개 URL (정적 리소스 매핑 /uploads/**)
+        String publicUrl = "/uploads/" + storedName;
+
+        // 6) DB 업데이트
+        userJdbcRepository.updateProfilePhoto(userId, publicUrl);
+
+        return publicUrl;
+    }
+
 }
