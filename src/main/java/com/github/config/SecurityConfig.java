@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .requestMatchers("/error").permitAll()
                 .requestMatchers(HttpMethod.POST,
                         "/auth/join", "/auth/login", "/auth/refresh", "/auth/logout").permitAll()
+                .requestMatchers(HttpMethod.GET, "/departments/**", "/positions/**").permitAll() //부서,직책 드롭다운
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 .anyRequest().authenticated()

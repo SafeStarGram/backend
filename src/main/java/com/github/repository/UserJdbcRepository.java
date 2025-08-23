@@ -57,10 +57,10 @@ public class UserJdbcRepository {
     }
 
     public UserEntity findByEmail(String email) {
-        String sql = "SELECT user_id, email, name, password FROM users WHERE email = ?";
+        String sql = "SELECT users_id, email, name, password FROM users WHERE email = ?";
         var list = jdbcTemplate.query(sql, (rs, rn) -> {
             UserEntity u = new UserEntity();
-            u.setUserId(rs.getInt("user_id"));   // PK 컬럼명에 맞게
+            u.setUserId(rs.getInt("users_id"));   // PK 컬럼명에 맞게
             u.setEmail(rs.getString("email"));
             u.setName(rs.getString("name"));
             u.setPassword(rs.getString("password"));
@@ -69,4 +69,5 @@ public class UserJdbcRepository {
 
         return list.isEmpty() ? null : list.get(0);
     }
+
 }
