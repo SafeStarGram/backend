@@ -38,7 +38,7 @@ public class AuthService {
         UserEntity userEntity = UserEntity.builder()
                 .email(signUpDto.getEmail())
                 .name(signUpDto.getName())
-                .password(signUpDto.getPassword()) // <<encode필요
+                .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .build();
 
         userJdbcRepository.save(userEntity);

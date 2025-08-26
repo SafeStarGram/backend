@@ -23,7 +23,7 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwt;
 
-    private static final AntPathMatcher matcher = new AntPathMatcher(); // ★ 변경
+    private static final AntPathMatcher matcher = new AntPathMatcher();
 
     private static final String[] PUBLIC_PATTERNS = {
             "/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/uploads/**", "/error"
@@ -34,7 +34,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
 
-        final String uri = req.getRequestURI(); // ★ 변경
+        final String uri = req.getRequestURI();
 
         for (String p : PUBLIC_PATTERNS) {
             if (matcher.match(p, uri)) {
@@ -74,7 +74,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             res.setContentType("application/json;charset=UTF-8");
             res.getWriter().write("{\"code\":\"UNAUTHORIZED\",\"message\":\"잘못된 또는 만료된 토큰\"}");
-        } catch (JwtException ex) { // ★ 변경: 파싱/서명 오류 등
+        } catch (JwtException ex) {
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             res.setContentType("application/json;charset=UTF-8");
             res.getWriter().write("{\"code\":\"UNAUTHORIZED\",\"message\":\"토큰 검증 실패\"}");
