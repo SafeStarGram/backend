@@ -1,28 +1,28 @@
 package com.github.entity;
 
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false)
+    private Integer areaId;
+    private Integer departmentId;
+    private Integer positionId;
     private String name;
-
-    @Column(nullable = false)
+    private String email;
     private String password;
-
-
-
+    private String profilePhotoUrl;
+    private String phoneNumber; //varchar여서 int -> string으로 수정
+    private String radioNumber; //varchar여서 int -> string으로 수정
+    private Integer role;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

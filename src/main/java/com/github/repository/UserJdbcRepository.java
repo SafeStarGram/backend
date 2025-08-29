@@ -7,8 +7,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 @Repository
@@ -55,4 +55,69 @@ public class UserJdbcRepository {
 
 
     }
+
+    public UserEntity findByEmail(String email) {
+        String sql = "SELECT users_id, email, name, password FROM users WHERE email = ?";
+        var list = jdbcTemplate.query(sql, (rs, rn) -> {
+            UserEntity u = new UserEntity();
+            u.setUserId(rs.getInt("users_id"));   // PK 컬럼명에 맞게
+            u.setEmail(rs.getString("email"));
+            u.setName(rs.getString("name"));
+            u.setPassword(rs.getString("password"));
+            return u;
+        }, email);
+
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    public UserEntity findById(Integer userId) {
+        String sql = "SELECT users_id, name, phone_number, radio_number, profile_photo_url, department_id, position_id " +
+                "FROM users WHERE users_id = ?";
+
+        var list = jdbcTemplate.query(sql, (rs, rn) -> {
+            UserEntity u = new UserEntity();
+            u.setUserId(rs.getInt("users_id"));
+            u.setName(rs.getString("name"));
+            u.setPhoneNumber(rs.getString("phone_number"));
+            u.setRadioNumber(rs.getString("radio_number"));
+            u.setProfilePhotoUrl(rs.getString("profile_photo_url"));
+            u.setDepartmentId(rs.getInt("department_id"));
+            u.setPositionId(rs.getInt("position_id"));
+            return u;
+        }, userId);
+
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    public void updateProfile(int userId,
+                              String phoneNumber,
+                              String radioNumber,
+                              Integer departmentId,
+                              Integer positionId,
+                              String profilePhotoUrl) {
+        String sql = "UPDATE users " +
+                "SET phone_number = ?, " +
+                "    radio_number = ?, " +
+                "    department_id = ?, " +
+                "    position_id = ?, " +
+                "    profile_photo_url = ?, " +
+                "    updated_at = NOW() " +
+                "WHERE users_id = ?";
+
+        jdbcTemplate.update(sql,
+                phoneNumber,
+                radioNumber,
+                departmentId,
+                positionId,
+                profilePhotoUrl,
+                userId
+        );
+    }
+
+//    사진업로드
+    public int updateProfilePhoto(int userId, String photoUrl) {
+        String sql = "UPDATE users SET profile_photo_url = ?, updated_at = NOW() WHERE users_id = ?";
+        return jdbcTemplate.update(sql, photoUrl, userId);
+    }
+
 }
