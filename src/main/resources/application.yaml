@@ -3,6 +3,11 @@
         name: safestargram
     profiles:
         default: dev
+  jwt:
+      secret: ${JWT_SECRET}
+      access-ttl: 1h
+      refresh-ttl: 13d
+      issuer: your-service
 
   security:
       oauth2:
@@ -28,8 +33,3 @@
                       user-name-attribute: id
 
 
-  jwt:
-    secret: ${JWT_SECRET}
-    access-ttl: 1h
-    refresh-ttl: 13d
-    issuer: your-service
