@@ -11,10 +11,8 @@ spring:
     password: safetyworld
   data:
     redis:
-      host: 144.24.80.209
-      port: 6606
-      username: safestargram
-      password: safetyworld
+      host: localhost
+      port: 6379
       timeout: 2s
       lettuce:
         pool:
