@@ -19,7 +19,7 @@ public class AuthService {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
             UserEntity user = UserEntity.builder()
-                    .Email(signUpDto.getEmail())
+                    .email(signUpDto.getEmail())
                     .password(signUpDto.getPassword())
                     .name(signUpDto.getName())
                     .build();
