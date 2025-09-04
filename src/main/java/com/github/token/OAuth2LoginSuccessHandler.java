@@ -4,6 +4,7 @@ import com.github.dto.TokenResponse;
 import com.github.jwt.JwtProperties;
 import com.github.jwt.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -42,11 +43,20 @@ public class OAuth2LoginSuccessHandler  implements AuthenticationSuccessHandler 
         String refresh = jwt.generateRefreshToken(userId, role, jti);
         store.save(userId, jti);
 
+        // RefreshToken을 쿠키로 설정
+        Cookie cookie = new Cookie("refreshToken", refresh);
+        cookie.setHttpOnly(false); // 프론트엔드에서 접근 가능
+        cookie.setSecure(false); // HTTPS에서만 전송 (개발환경에서는 false)
+        cookie.setPath("/"); // 모든 경로에서 쿠키 사용 가능
+        cookie.setMaxAge(60 * 60 * 24 * 13); // 13일 (refresh token 만료시간과 동일)
+        res.addCookie(cookie);
+
         TokenResponse body = TokenResponse.builder()
                 .accessToken(access)
                 .refreshToken(refresh)
                 .tokenType("Bearer")
                 .expiresIn(props.getAccessTtl().toSeconds())
+                .userId(userId)
                 .build();
 
         res.setStatus(200);
