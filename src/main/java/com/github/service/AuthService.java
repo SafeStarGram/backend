@@ -67,6 +67,7 @@ public class AuthService {
                 .refreshToken(refresh)
                 .tokenType("Bearer")
                 .expiresIn(props.getAccessTtl().toSeconds())
+                .userId(user.getUserId().longValue())
                 .build();
     }
 }

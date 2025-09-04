@@ -47,6 +47,7 @@ public class OAuth2LoginSuccessHandler  implements AuthenticationSuccessHandler 
                 .refreshToken(refresh)
                 .tokenType("Bearer")
                 .expiresIn(props.getAccessTtl().toSeconds())
+                .userId(userId)
                 .build();
 
         res.setStatus(200);
