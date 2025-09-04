@@ -5,6 +5,7 @@ import com.github.dto.LoginRequest;
 import com.github.dto.SignUpDto;
 import com.github.service.AuthService;
 import com.github.dto.TokenResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest request) {
+    public TokenResponse login(@RequestBody LoginRequest request, HttpServletResponse response) {
         if (request.getEmail() == null || request.getEmail().isBlank()
                 || request.getPassword() == null || request.getPassword().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email/password는 필수");
         }
-        return authService.login(request);
+        return authService.login(request, response);
     }
 
+    @PostMapping("/login-no-cookie")
+    public TokenResponse loginWithoutCookie(@RequestBody LoginRequest request) {
+        if (request.getEmail() == null || request.getEmail().isBlank()
+                || request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "email/password는 필수");
+        }
+        return authService.loginWithoutCookie(request);
+    }
 }
