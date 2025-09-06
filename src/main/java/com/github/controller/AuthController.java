@@ -22,7 +22,7 @@ public class AuthController {
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody SignUpDto signUpDto) {
         authService.join(signUpDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공입니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공입니다..");
     }
 
     @PostMapping("/login")
