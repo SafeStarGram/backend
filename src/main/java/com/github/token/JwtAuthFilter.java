@@ -33,44 +33,34 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
-
         final String uri = req.getRequestURI();
-
         for (String p : PUBLIC_PATTERNS) {
             if (matcher.match(p, uri)) {
                 chain.doFilter(req, res);
                 return;
             }
         }
-
         String header = req.getHeader(HttpHeaders.AUTHORIZATION);
         if (!StringUtils.hasText(header) || !header.startsWith("Bearer ")) {
             chain.doFilter(req, res);
             return;
         }
-
         String token = header.substring(7);
         try {
             if (jwt.validate(token)) {
                 String userId = String.valueOf(jwt.getUserId(token));
                 String role = jwt.getRole(token);
-
-                //
                 String authority = (role != null && role.startsWith("ROLE_")) ? role : "ROLE_" + role;
-
                 var auth = new UsernamePasswordAuthenticationToken(
                         userId,
                         null,
                         role != null ? List.of(new SimpleGrantedAuthority(authority)) : List.of()
                 );
-                //
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
-
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 chain.doFilter(req, res);
                 return;
             }
-
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             res.setContentType("application/json;charset=UTF-8");
             res.getWriter().write("{\"code\":\"UNAUTHORIZED\",\"message\":\"잘못된 또는 만료된 토큰\"}");

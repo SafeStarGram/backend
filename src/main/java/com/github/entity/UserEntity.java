@@ -14,8 +14,6 @@ public class UserEntity {
 
     private Integer userId;
     private Integer areaId;
-    private Integer departmentId;
-    private Integer positionId;
     private String name;
     private String email;
     private String password;

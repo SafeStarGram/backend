@@ -71,7 +71,7 @@ public class UserJdbcRepository {
     }
 
     public UserEntity findById(Integer userId) {
-        String sql = "SELECT users_id, name, phone_number, radio_number, profile_photo_url, department_id, position_id " +
+        String sql = "SELECT users_id, name, phone_number, radio_number, profile_photo_url " +
                 "FROM users WHERE users_id = ?";
 
         var list = jdbcTemplate.query(sql, (rs, rn) -> {
@@ -81,8 +81,6 @@ public class UserJdbcRepository {
             u.setPhoneNumber(rs.getString("phone_number"));
             u.setRadioNumber(rs.getString("radio_number"));
             u.setProfilePhotoUrl(rs.getString("profile_photo_url"));
-            u.setDepartmentId(rs.getInt("department_id"));
-            u.setPositionId(rs.getInt("position_id"));
             return u;
         }, userId);
 
@@ -92,14 +90,10 @@ public class UserJdbcRepository {
     public void updateProfile(int userId,
                               String phoneNumber,
                               String radioNumber,
-                              Integer departmentId,
-                              Integer positionId,
                               String profilePhotoUrl) {
         String sql = "UPDATE users " +
                 "SET phone_number = ?, " +
                 "    radio_number = ?, " +
-                "    department_id = ?, " +
-                "    position_id = ?, " +
                 "    profile_photo_url = ?, " +
                 "    updated_at = NOW() " +
                 "WHERE users_id = ?";
@@ -107,8 +101,6 @@ public class UserJdbcRepository {
         jdbcTemplate.update(sql,
                 phoneNumber,
                 radioNumber,
-                departmentId,
-                positionId,
                 profilePhotoUrl,
                 userId
         );

@@ -35,6 +35,7 @@ public class AuthService {
         cookie.setSecure(false); // HTTPS에서만 전송 (개발환경에서는 false)
         cookie.setPath("/"); // 모든 경로에서 쿠키 사용 가능
         cookie.setMaxAge(60 * 60 * 24 * 13); // 13일 (refresh token 만료시간과 동일)
+        cookie.setDomain(null); // 모든 도메인에서 사용 가능
         response.addCookie(cookie);
     }
 
