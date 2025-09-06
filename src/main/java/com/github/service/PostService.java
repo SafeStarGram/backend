@@ -3,13 +3,14 @@ package com.github.service;
 import com.github.dto.PostCreateRequest;
 import com.github.entity.PostEntity;
 import com.github.repository.PostRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +37,20 @@ public class PostService {
 
             PostEntity e = PostEntity.builder()
                     .subAreaId(req.getSubAreaId())
-                    .repoterId(req.getUserId())       // 나중에 리팩토링 필요할수도
+                    .reporterId(req.getUserId())       // 나중에 리팩토링 필요할수도
                     .title(req.getTitle())
                     .content(req.getContent())
-                    .repoterRisk(req.getRepoterRisk())
+                    .reporterRisk(req.getReporterRisk())
                     .createdAt(now)
                     .imageBlob(imageBytes)
                     .updatedAt(now)
                     .build();
 
             postRepository.insert(e);
+    }
+
+    @Transactional
+    public List<PostEntity> getAllPosts(int page, int size) {
+        return postRepository.findAll(page,size);
     }
 }

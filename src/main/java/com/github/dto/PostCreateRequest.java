@@ -14,5 +14,5 @@ public class PostCreateRequest {
     private Long subAreaId;
     private String title;
     private String content;
-    private String repoterRisk;
+    private String reporterRisk;
 }

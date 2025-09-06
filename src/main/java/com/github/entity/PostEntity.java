@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 public class PostEntity {
     private Long postId;
     private Long subAreaId;
-    private Long repoterId;
+    private Long reporterId;
     private Long actionTakerId;
     private String title;
     private String content;
 
     private byte[] imageBlob;
 
-    private String repoterRisk;
+    private String reporterRisk;
     private String managerRisk;
     private String isChecked;
     private String isActionTaken;
