@@ -23,23 +23,14 @@ public class ProfileController {
     }
 
     // 내 프로필 수정
-    @PatchMapping("/me")
+    @PatchMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProfileResponse> updateMyProfile(
             @RequestParam int userId,
-            @RequestBody ProfileUpdateRequest req
-    ) {
-        return ResponseEntity.ok(profileService.updateMyProfile(userId, req));
-    }
-
-    // 프로필 사진 업로드
-    @PostMapping(value = "/me/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadProfilePhoto(
-            @RequestParam int userId,
-            @RequestParam("file") MultipartFile file
+            @RequestPart(value = "profile", required = false) ProfileUpdateRequest req,
+            @RequestPart(value = "file", required = false) MultipartFile file
     ) throws Exception {
-        String url = profileService.uploadProfilePhoto(userId, file);
-        // 간단히 업로드된 URL만 반환
-        return ResponseEntity.ok().body(java.util.Map.of("profilePhotoUrl", url));
+        return ResponseEntity.ok(
+                profileService.updateMyProfileAndPhoto(userId, req, file)
+        );
     }
-
 }
